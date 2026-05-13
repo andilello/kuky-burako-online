@@ -49,7 +49,7 @@ export default function WelcomeScreen({ onContinue }: any) {
           <p style={{textAlign:"center",color:"#d8b27a",fontSize:16,lineHeight:1.55,margin:"0 0 26px"}}>
             Ingresá los dos jugadores para probar la partida local y seguir corrigiendo reglas y jugabilidad.
           </p>
-          <button onClick={onContinue} style={{...primaryButtonStyle,fontSize:18,padding:"14px 18px",marginTop:0}}>Entrar al juego</button>
+          <button onClick={testOnline} style={{...primaryButtonStyle,fontSize:18,padding:"14px 18px",marginTop:0}}>Entrar al juego</button>
           <div style={{marginTop:24,paddingTop:20,borderTop:"1px solid rgba(255,255,255,.08)",fontSize:12,color:"#8a6a38",lineHeight:1.8}}>
             ✓ Escaleras corregidas · ✓ Comodines dinámicos · ✓ Piernas ilimitadas · ✓ Canastas con piernas · ✓ Drag & drop manual
           </div>

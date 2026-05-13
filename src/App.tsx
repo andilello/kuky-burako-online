@@ -1,3 +1,4 @@
+import { createRoom } from "./online";
 import { useState, useCallback, useEffect } from "react";
 import { buildDeck, shuffle } from "./deck";
 import { tileValue, handPenalty, groupSum } from "./scoring";
@@ -104,6 +105,13 @@ const HBTN={padding:"4px 8px",background:"rgba(244,185,66,.08)",
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 export default function App() {
+  async function testOnline() {
+    const room = await createRoom();
+  
+    console.log("ROOM CREADA:", room);
+  
+    alert(`Sala creada: ${room?.code}`);
+  }
   const [screen,setScreen]=useState("welcome");
   const [game,setGame]=useState(null);
   const [names,setNames]=useState([]);
@@ -129,7 +137,12 @@ export default function App() {
   },[game,carryScores,names,nextStarter,gameMode]);
   const newGame=useCallback(()=>{setGame(null);setCarryScores([0,0]);setNextStarter(0);setScreen("login");},[]);
 
-  if(screen==="welcome") return <WelcomeScreen onContinue={()=>setScreen("login")}/>;
+  if(screen==="welcome") return (
+    <WelcomeScreen
+      onContinue={() => setScreen("login")}
+      testOnline={testOnline}
+    />
+  );
   if(screen==="login") return <LoginScreen onStart={start}/>;
   if(screen==="mode") return <ModeSelectScreen onSelect={chooseMode}/>;
   if(screen==="starter") return <StarterDrawScreen names={names} onStart={startWithPlayer}/>;
