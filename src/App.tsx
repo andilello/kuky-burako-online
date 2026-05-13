@@ -1,3 +1,4 @@
+import RoomWaitingScreen from "./screens/RoomWaitingScreen";
 import OnlineLobbyScreen from "./screens/OnlineLobbyScreen";
 import { createRoom, joinRoom } from "./online";
 import { useState, useCallback, useEffect } from "react";
@@ -113,7 +114,7 @@ export default function App() {
     }
   
     const room = await createRoom(playerName);
-  
+      
     if (!room) {
       alert("No se pudo crear la sala");
       return;
@@ -121,7 +122,8 @@ export default function App() {
   
     console.log("ROOM CREADA:", room);
   
-    alert(`Sala creada: ${room.code}`);
+    setOnlineRoom(room);
+    setScreen("room");
   }
   async function handleJoinRoom(code: string, playerName: string) {
     if (!playerName.trim()) {
@@ -141,8 +143,10 @@ export default function App() {
       return;
     }
   
-    alert("Te uniste a la sala correctamente");
+    setOnlineRoom(result.room);
+    setScreen("room");
   }
+  const [onlineRoom, setOnlineRoom] = useState(null);
   const [screen,setScreen]=useState("welcome");
   const [game,setGame]=useState(null);
   const [names,setNames]=useState([]);
@@ -180,6 +184,12 @@ export default function App() {
     onJoinRoom={handleJoinRoom}
     onBack={() => setScreen("welcome")}
   />
+  );
+  if(screen==="room") return (
+    <RoomWaitingScreen
+      room={onlineRoom}
+      onBack={() => setScreen("online")}
+    />
   );
   if(screen==="login") return <LoginScreen onStart={start}/>;
   if(screen==="mode") return <ModeSelectScreen onSelect={chooseMode}/>;
