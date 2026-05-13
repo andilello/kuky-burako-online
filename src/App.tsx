@@ -1,5 +1,5 @@
 import OnlineLobbyScreen from "./screens/OnlineLobbyScreen";
-import { createRoom } from "./online";
+import { createRoom, joinRoom } from "./online";
 import { useState, useCallback, useEffect } from "react";
 import { buildDeck, shuffle } from "./deck";
 import { tileValue, handPenalty, groupSum } from "./scoring";
@@ -106,13 +106,42 @@ const HBTN={padding:"4px 8px",background:"rgba(244,185,66,.08)",
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 export default function App() {
-  async function testOnline() {
-    const room = await createRoom();
+  async function testOnline(playerName: string) {
+    if (!playerName.trim()) {
+      alert("Ingresá tu nombre");
+      return;
+    }
+  
+    const room = await createRoom(playerName);
+  
+    if (!room) {
+      alert("No se pudo crear la sala");
+      return;
+    }
   
     console.log("ROOM CREADA:", room);
   
-    alert(`Sala creada: ${room?.code}`);
-    setScreen("login");
+    alert(`Sala creada: ${room.code}`);
+  }
+  async function handleJoinRoom(code: string, playerName: string) {
+    if (!playerName.trim()) {
+      alert("Ingresá tu nombre");
+      return;
+    }
+  
+    if (!code.trim()) {
+      alert("Ingresá un código de sala");
+      return;
+    }
+  
+    const result = await joinRoom(code, playerName);
+  
+    if (result.error) {
+      alert(result.error);
+      return;
+    }
+  
+    alert("Te uniste a la sala correctamente");
   }
   const [screen,setScreen]=useState("welcome");
   const [game,setGame]=useState(null);
@@ -147,10 +176,10 @@ export default function App() {
   );
   if(screen==="online") return (
     <OnlineLobbyScreen
-      onCreateRoom={testOnline}
-      onJoinRoom={() => alert("Próximo paso: unirse a sala")}
-      onBack={() => setScreen("welcome")}
-    />
+    onCreateRoom={testOnline}
+    onJoinRoom={handleJoinRoom}
+    onBack={() => setScreen("welcome")}
+  />
   );
   if(screen==="login") return <LoginScreen onStart={start}/>;
   if(screen==="mode") return <ModeSelectScreen onSelect={chooseMode}/>;
