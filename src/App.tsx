@@ -1,3 +1,4 @@
+import OnlineLobbyScreen from "./screens/OnlineLobbyScreen";
 import { createRoom } from "./online";
 import { useState, useCallback, useEffect } from "react";
 import { buildDeck, shuffle } from "./deck";
@@ -140,9 +141,16 @@ export default function App() {
 
   if(screen==="welcome") return (
     <WelcomeScreen
-    onOnline={testOnline}
-    onPractice={() => setScreen("login")}
-  />
+      onOnline={() => setScreen("online")}
+      onPractice={() => setScreen("login")}
+    />
+  );
+  if(screen==="online") return (
+    <OnlineLobbyScreen
+      onCreateRoom={testOnline}
+      onJoinRoom={() => alert("Próximo paso: unirse a sala")}
+      onBack={() => setScreen("welcome")}
+    />
   );
   if(screen==="login") return <LoginScreen onStart={start}/>;
   if(screen==="mode") return <ModeSelectScreen onSelect={chooseMode}/>;
