@@ -14,7 +14,7 @@ const primaryButtonStyle = {
   fontFamily: "'Playfair Display',Georgia,serif",
 };
 
-export default function WelcomeScreen({ onContinue }: any) {
+export default function WelcomeScreen({ onContinue, testOnline }: any) {
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",
       background:"radial-gradient(circle at 30% 15%,#3a1c06,#160700 55%,#050100)",
