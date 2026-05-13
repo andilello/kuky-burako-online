@@ -1,4 +1,4 @@
-import KUKY_PHOTO from "../assets/kuky.jpg";
+import KUKY_PHOTO from "../assets/hero.png";
 
 const primaryButtonStyle = {
   width: "100%",
