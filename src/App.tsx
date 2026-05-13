@@ -111,6 +111,7 @@ export default function App() {
     console.log("ROOM CREADA:", room);
   
     alert(`Sala creada: ${room?.code}`);
+    setScreen("login");
   }
   const [screen,setScreen]=useState("welcome");
   const [game,setGame]=useState(null);
