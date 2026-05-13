@@ -140,9 +140,9 @@ export default function App() {
 
   if(screen==="welcome") return (
     <WelcomeScreen
-      onContinue={() => setScreen("login")}
-      testOnline={testOnline}
-    />
+    onOnline={testOnline}
+    onPractice={() => setScreen("login")}
+  />
   );
   if(screen==="login") return <LoginScreen onStart={start}/>;
   if(screen==="mode") return <ModeSelectScreen onSelect={chooseMode}/>;
