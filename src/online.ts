@@ -1,3 +1,4 @@
+import { buildDeck, shuffle } from "./deck";
 import { supabase } from "./supabase";
 
 function generateRoomCode() {
@@ -95,21 +96,66 @@ export async function startOnlineGame(roomCode: string) {
   }
 
   const currentState = room.state || {};
+  const players = currentState.players || [];
 
-  const { error: updateError } = await supabase
+  if (players.length < 2) {
+    console.error("No hay suficientes jugadores para iniciar la partida");
+    return null;
+  }
+
+  const deck = shuffle(buildDeck());
+
+  const hand0 = deck.splice(0, 11);
+  const hand1 = deck.splice(0, 11);
+  const dead0 = deck.splice(0, 11);
+  const dead1 = deck.splice(0, 11);
+
+  const onlineGame = {
+    players: [players[0].name, players[1].name],
+    currentPlayer: 0,
+    hands: [hand0, hand1],
+    dead: [dead0, dead1],
+    deadBought: [false, false],
+    deadAvailable: [true, true],
+    table: [],
+    drawPile: deck,
+    discardPile: [],
+    selected: [],
+    message: `Turno de ${players[0].name}. Tomá una ficha del mazo.`,
+    totalScores: [0, 0],
+    gameMode: { type: "points", target: 3000 },
+    roundScores: null,
+    drawnThisTurn: false,
+    manoFirstTurn: true,
+    manoCanReturn: false,
+    firstDrawnTile: null,
+    manoSwapUsed: false,
+    hasLaidDown: [false, false],
+    roundOver: false,
+    gameOver: false,
+    winner: null,
+    undoState: null,
+    closeWarning: false,
+    online: true,
+  };
+
+  const { data: updatedRoom, error: updateError } = await supabase
     .from("rooms")
     .update({
       state: {
         ...currentState,
         status: "started",
+        game: onlineGame,
       },
     })
-    .eq("code", roomCode);
+    .eq("code", roomCode)
+    .select()
+    .single();
 
   if (updateError) {
     console.error(updateError);
     return null;
   }
 
-  return true;
+  return updatedRoom;
 }

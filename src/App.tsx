@@ -191,7 +191,11 @@ export default function App() {
     onBack={() => setScreen("online")}
     onStarted={(room: any) => {
       console.log("PARTIDA ONLINE INICIADA:", room);
-      alert("La partida online está iniciando");
+    
+      if (room?.state?.game) {
+        setGame(room.state.game);
+        setScreen("game");
+      }
     }}
   />
   );
