@@ -1,5 +1,30 @@
+import { useEffect, useState } from "react";
+import { supabase } from "../supabase";
 export default function RoomWaitingScreen({ room, onBack }: any) {
-    const players = room?.state?.players || [];
+  const [liveRoom, setLiveRoom] = useState(room);
+  const players = liveRoom?.state?.players || [];
+  useEffect(() => {
+    const channel = supabase
+      .channel(`room-${room.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "rooms",
+          filter: `id=eq.${room.id}`,
+        },
+        (payload) => {
+          console.log("Realtime update:", payload);
+          setLiveRoom(payload.new);
+        }
+      )
+      .subscribe();
+  
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [room.id]);
   
     return (
       <div style={{
@@ -44,7 +69,7 @@ export default function RoomWaitingScreen({ room, onBack }: any) {
               letterSpacing: 6,
               color: "#ffe066"
             }}>
-              {room?.code}
+              {liveRoom?.code}
             </div>
           </div>
   
