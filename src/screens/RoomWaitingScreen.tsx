@@ -1,7 +1,7 @@
 import { startOnlineGame } from "../online";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
-export default function RoomWaitingScreen({ room, onBack }: any) {
+export default function RoomWaitingScreen({ room, onBack, onStarted }: any) {
   const [liveRoom, setLiveRoom] = useState(room);
   const players = liveRoom?.state?.players || [];
   useEffect(() => {
@@ -26,6 +26,11 @@ export default function RoomWaitingScreen({ room, onBack }: any) {
       supabase.removeChannel(channel);
     };
   }, [room.id]);
+  useEffect(() => {
+    if (liveRoom?.state?.status === "started") {
+      onStarted(liveRoom);
+    }
+  }, [liveRoom, onStarted]);
   
     return (
       <div style={{

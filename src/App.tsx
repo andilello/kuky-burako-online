@@ -187,9 +187,13 @@ export default function App() {
   );
   if(screen==="room") return (
     <RoomWaitingScreen
-      room={onlineRoom}
-      onBack={() => setScreen("online")}
-    />
+    room={onlineRoom}
+    onBack={() => setScreen("online")}
+    onStarted={(room: any) => {
+      console.log("PARTIDA ONLINE INICIADA:", room);
+      alert("La partida online está iniciando");
+    }}
+  />
   );
   if(screen==="login") return <LoginScreen onStart={start}/>;
   if(screen==="mode") return <ModeSelectScreen onSelect={chooseMode}/>;
