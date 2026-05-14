@@ -162,21 +162,7 @@ export default function LoginScreen({ onStart, onBack }: any) {
         Volver
       </button>
 
-      <div
-        style={{
-          marginTop: 40,
-          maxWidth: 440,
-          color: "#5a3a10",
-          fontSize: 11,
-          lineHeight: 1.8,
-          textAlign: "center",
-          padding: "0 20px",
-        }}
-      >
-        <strong style={{ color: "#7a5020" }}>Cómo jugar:</strong> 11 fichas +
-        muerto de 11. Armá escaleras y piernas. 7+ fichas = Canasta. El 2
-        actúa como comodín. Meta: 3000 puntos.
-      </div>
+      
     </div>
   );
 }
