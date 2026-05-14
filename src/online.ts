@@ -82,3 +82,34 @@ export async function joinRoom(code: string, playerName: string) {
 
   return { room: updatedRoom, error: null };
 }
+export async function startOnlineGame(roomCode: string) {
+  const { data: room, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("code", roomCode)
+    .single();
+
+  if (error || !room) {
+    console.error(error);
+    return null;
+  }
+
+  const currentState = room.state || {};
+
+  const { error: updateError } = await supabase
+    .from("rooms")
+    .update({
+      state: {
+        ...currentState,
+        status: "started",
+      },
+    })
+    .eq("code", roomCode);
+
+  if (updateError) {
+    console.error(updateError);
+    return null;
+  }
+
+  return true;
+}

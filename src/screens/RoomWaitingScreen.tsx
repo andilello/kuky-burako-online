@@ -1,3 +1,4 @@
+import { startOnlineGame } from "../online";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
 export default function RoomWaitingScreen({ room, onBack }: any) {
@@ -108,6 +109,16 @@ export default function RoomWaitingScreen({ room, onBack }: any) {
                 Esperando rival…
               </div>
             )}
+            {players.length === 2 && (
+  <button
+  onClick={async () => {
+    await startOnlineGame(room.code);
+  }}
+    style={startButtonStyle}
+  >
+    Comenzar partida
+  </button>
+)}
           </div>
   
           <button onClick={onBack} style={backButtonStyle}>
@@ -125,6 +136,19 @@ export default function RoomWaitingScreen({ room, onBack }: any) {
     background: "transparent",
     color: "#b78b45",
     border: "1px solid rgba(244,185,66,.2)",
+    borderRadius: 10,
+    fontSize: 18,
+    fontWeight: 700,
+    cursor: "pointer",
+    fontFamily: "'Playfair Display',Georgia,serif",
+  };
+  const startButtonStyle = {
+    width: "100%",
+    marginTop: 24,
+    padding: "14px 18px",
+    background: "linear-gradient(135deg,#f4b942,#d4830a)",
+    color: "#1a0800",
+    border: "none",
     borderRadius: 10,
     fontSize: 18,
     fontWeight: 700,
