@@ -195,7 +195,12 @@ export default function App() {
     }}
   />
   );
-  if(screen==="login") return <LoginScreen onStart={start}/>;
+  if(screen==="login") return (
+    <LoginScreen
+      onStart={start}
+      onBack={() => setScreen("welcome")}
+    />
+  );
   if(screen==="mode") return <ModeSelectScreen onSelect={chooseMode}/>;
   if(screen==="starter") return <StarterDrawScreen names={names} onStart={startWithPlayer}/>;
   if(!game) return null;
