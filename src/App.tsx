@@ -1,3 +1,4 @@
+import OnlineStarterDrawScreen from "./screens/OnlineStarterDrawScreen";
 import RoomWaitingScreen from "./screens/RoomWaitingScreen";
 import OnlineLobbyScreen from "./screens/OnlineLobbyScreen";
 import { createRoom, joinRoom } from "./online";
@@ -195,12 +196,23 @@ export default function App() {
     onStarted={(room: any) => {
       console.log("PARTIDA ONLINE INICIADA:", room);
     
+      if (room?.state?.status === "starter_draw") {
+        setOnlineRoom(room);
+        setScreen("starterDraw");
+        return;
+      }
+      
       if (room?.state?.game) {
         setGame(room.state.game);
         setScreen("game");
       }
     }}
   />
+  );
+  if(screen==="starterDraw") return (
+    <OnlineStarterDrawScreen
+      room={onlineRoom}
+    />
   );
   if(screen==="login") return (
     <LoginScreen

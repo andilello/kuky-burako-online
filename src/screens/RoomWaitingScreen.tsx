@@ -1,4 +1,4 @@
-import { startOnlineGame } from "../online";
+import { startOnlineStarterDraw } from "../online";
 import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
 export default function RoomWaitingScreen({ room, onBack, onStarted }: any) {
@@ -27,7 +27,10 @@ export default function RoomWaitingScreen({ room, onBack, onStarted }: any) {
     };
   }, [room.id]);
   useEffect(() => {
-    if (liveRoom?.state?.status === "started") {
+    if (
+      liveRoom?.state?.status === "started" ||
+      liveRoom?.state?.status === "starter_draw"
+    ) {
       onStarted(liveRoom);
     }
   }, [liveRoom, onStarted]);
@@ -117,7 +120,7 @@ export default function RoomWaitingScreen({ room, onBack, onStarted }: any) {
             {players.length === 2 && (
   <button
   onClick={async () => {
-    await startOnlineGame(room.code);
+    await startOnlineStarterDraw(room.code);
   }}
     style={startButtonStyle}
   >

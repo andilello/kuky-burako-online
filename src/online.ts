@@ -159,3 +159,64 @@ export async function startOnlineGame(roomCode: string) {
 
   return updatedRoom;
 }
+
+export async function startOnlineStarterDraw(roomCode: string) {
+  const { data: room, error } = await supabase
+    .from("rooms")
+    .select("*")
+    .eq("code", roomCode)
+    .single();
+
+  if (error || !room) {
+    console.error(error);
+    return null;
+  }
+
+  const currentState = room.state || {};
+  const players = currentState.players || [];
+
+  if (players.length < 2) {
+    console.error("No hay suficientes jugadores para sortear inicio");
+    return null;
+  }
+
+  const deck = shuffle(buildDeck());
+
+  const tile0 = deck.shift();
+  const tile1 = deck.shift();
+
+  const value0 = tile0?.n ?? 0;
+  const value1 = tile1?.n ?? 0;
+
+  let starterIndex = 0;
+
+  if (value1 > value0) {
+    starterIndex = 1;
+  }
+
+  const starterDraw = {
+    tiles: [tile0, tile1],
+    starterIndex,
+    deck,
+  };
+
+  const { data: updatedRoom, error: updateError } = await supabase
+    .from("rooms")
+    .update({
+      state: {
+        ...currentState,
+        status: "starter_draw",
+        starterDraw,
+      },
+    })
+    .eq("code", roomCode)
+    .select()
+    .single();
+
+  if (updateError) {
+    console.error(updateError);
+    return null;
+  }
+
+  return updatedRoom;
+}
