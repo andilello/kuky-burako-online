@@ -122,6 +122,7 @@ export default function App() {
   
     console.log("ROOM CREADA:", room);
   
+    setOnlinePlayerIndex(0);
     setOnlineRoom(room);
     setScreen("room");
   }
@@ -143,11 +144,13 @@ export default function App() {
       return;
     }
   
+    setOnlinePlayerIndex(1);
     setOnlineRoom(result.room);
     setScreen("room");
   }
   const [onlineRoom, setOnlineRoom] = useState(null);
   const [screen,setScreen]=useState("welcome");
+  const [onlinePlayerIndex, setOnlinePlayerIndex] = useState<number | null>(null);
   const [game,setGame]=useState(null);
   const [names,setNames]=useState([]);
   const [carryScores,setCarryScores]=useState([0,0]);
@@ -208,12 +211,22 @@ export default function App() {
   if(screen==="mode") return <ModeSelectScreen onSelect={chooseMode}/>;
   if(screen==="starter") return <StarterDrawScreen names={names} onStart={startWithPlayer}/>;
   if(!game) return null;
-  return <Game g={game} setG={setGame} onNewRound={newRound} onNewGame={newGame}/>;
+  return (
+    <Game
+      g={game}
+      setG={setGame}
+      onNewRound={newRound}
+      onNewGame={newGame}
+      viewerIdx={onlinePlayerIndex}
+    />
+  );
 }
-
 // ─── GAME ─────────────────────────────────────────────────────────────────────
-function Game({g,setG,onNewRound,onNewGame}) {
-  const cp=g.currentPlayer, op=1-cp;
+function Game({ g, setG, onNewRound, onNewGame, viewerIdx = null }) {
+  const cp = viewerIdx !== null ? viewerIdx : g.currentPlayer;
+  const turnPlayer = g.currentPlayer;
+  const op = 1 - cp;
+  const isMyTurn = cp === turnPlayer;
   const hand=g.hands[cp];
   const sel=g.selected;
   const [discardExpanded, setDiscardExpanded] = useState(false);
