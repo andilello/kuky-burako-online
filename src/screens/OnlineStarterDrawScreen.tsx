@@ -1,4 +1,5 @@
-export default function OnlineStarterDrawScreen({ room }: any) {
+import Tile from "../components/Tile";
+export default function OnlineStarterDrawScreen({ room, onContinue }: any) {
     const starterDraw = room?.state?.starterDraw;
   
     const players = room?.state?.players || [];
@@ -84,10 +85,18 @@ export default function OnlineStarterDrawScreen({ room }: any) {
               fontWeight: 700,
             }}
           >
-            {players[starterIndex]?.name} comienza la partida
+             {players[starterIndex]?.name} comienza la partida
+  </div>
+
+  <button
+    onClick={() => onContinue(room)}
+    style={continueButtonStyle}
+  >
+    Continuar
+  </button>
+</div>
           </div>
-        </div>
-      </div>
+
     );
   }
   
@@ -116,24 +125,9 @@ export default function OnlineStarterDrawScreen({ room }: any) {
           {player?.name}
         </div>
   
-        <div
-          style={{
-            width: 90,
-            height: 120,
-            margin: "0 auto",
-            borderRadius: 12,
-            background: "#fff3c4",
-            color: "#2b1204",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 42,
-            fontWeight: 900,
-            boxShadow: "0 8px 20px rgba(0,0,0,.35)",
-          }}
-        >
-          {tile?.n}
-        </div>
+        <div style={{ display: "flex", justifyContent: "center", margin: "0 auto" }}>
+  <Tile tile={tile} />
+</div>
   
         {winner && (
           <div
@@ -149,3 +143,17 @@ export default function OnlineStarterDrawScreen({ room }: any) {
       </div>
     );
   }
+  const continueButtonStyle = {
+    width: "100%",
+    maxWidth: 420,
+    marginTop: 30,
+    padding: "14px 18px",
+    background: "linear-gradient(135deg,#f4b942,#d4830a)",
+    color: "#1a0800",
+    border: "none",
+    borderRadius: 10,
+    fontSize: 18,
+    fontWeight: 700,
+    cursor: "pointer",
+    fontFamily: "'Playfair Display',Georgia,serif",
+  };

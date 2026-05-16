@@ -212,6 +212,22 @@ export default function App() {
   if(screen==="starterDraw") return (
     <OnlineStarterDrawScreen
       room={onlineRoom}
+      onContinue={(room:any)=>{
+        const starterIndex =
+          room?.state?.starterDraw?.starterIndex ?? 0;
+  
+        const playerNames =
+          room?.state?.players?.map((p:any)=>p.name) || [];
+  
+        const ng = initGame(
+          playerNames,
+          starterIndex,
+          gameMode
+        );
+  
+        setGame(ng);
+        setScreen("game");
+      }}
     />
   );
   if(screen==="login") return (

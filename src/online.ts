@@ -182,17 +182,21 @@ export async function startOnlineStarterDraw(roomCode: string) {
 
   const deck = shuffle(buildDeck());
 
-  const tile0 = deck.shift();
-  const tile1 = deck.shift();
+  let tile0 = deck.shift();
+  let tile1 = deck.shift();
 
-  const value0 = tile0?.n ?? 0;
-  const value1 = tile1?.n ?? 0;
+  let value0 = tile0?.num ?? 0;
+  let value1 = tile1?.num ?? 0;
 
-  let starterIndex = 0;
+while (value0 === value1 && deck.length >= 2) {
+  tile0 = deck.shift();
+  tile1 = deck.shift();
 
-  if (value1 > value0) {
-    starterIndex = 1;
-  }
+  value0 = tile0?.num ?? 0;
+  value1 = tile1?.num ?? 0;
+}
+
+const starterIndex = value1 > value0 ? 1 : 0;
 
   const starterDraw = {
     tiles: [tile0, tile1],
